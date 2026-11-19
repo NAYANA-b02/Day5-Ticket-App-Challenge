@@ -63,3 +63,59 @@ def test_resolved_status_is_displayed_correctly(client):
     response = client.get("/")
 
     assert b">Resolved</span>" in response.data
+
+#negative test cases
+def test_missing_title_returns_400(client):
+    response = client.post(
+        "/api/tickets",
+        json={
+            "description": "Missing title",
+            "category": "Hardware",
+            "priority": "High"
+        }
+    )
+    assert response.status_code == 400
+
+
+def test_empty_title_returns_400_negative(client):
+    response = client.post(
+        "/api/tickets",
+        json={
+            "title": "",
+            "category": "Hardware",
+            "priority": "High"
+        }
+    )
+    assert response.status_code == 400
+
+
+def test_unknown_category_returns_400(client):
+    response = client.post(
+        "/api/tickets",
+        json={
+            "title": "Test ticket",
+            "category": "Furniture",
+            "priority": "High"
+        }
+    )
+    assert response.status_code == 400
+
+
+def test_unknown_priority_returns_400(client):
+    response = client.post(
+        "/api/tickets",
+        json={
+            "title": "Test ticket",
+            "category": "Hardware",
+            "priority": "Urgent"
+        }
+    )
+    assert response.status_code == 400
+
+
+def test_unknown_status_returns_400(client):
+    response = client.patch(
+        "/api/tickets/1/status",
+        json={"status": "Pending"}
+    )
+    assert response.status_code == 400
