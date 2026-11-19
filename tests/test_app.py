@@ -58,3 +58,8 @@ def test_empty_title_returns_400(client):
     )
 
     assert response.status_code == 400
+
+def test_resolved_status_is_displayed_correctly(client):
+    response = client.get("/")
+
+    assert b">Resolved</span>" in response.data
